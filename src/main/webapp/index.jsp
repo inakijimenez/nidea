@@ -1,8 +1,8 @@
 
 
 
-<jsp:include page="templates/head.jsp"></jsp:include>
-<jsp:include page="templates/navbar.jsp"></jsp:include>
+<jsp:include page="/templates/head.jsp"></jsp:include>
+<jsp:include page="/templates/navbar.jsp"></jsp:include>
 
 <%
 	//scriplet
@@ -15,5 +15,5 @@
 <p>Hora: <%=hora%></p>
 
 <a href="generar-mesa">Quieres comprar una mesa</a>
-<jsp:include page="templates/footer.jsp"></jsp:include>
+<jsp:include page="/templates/footer.jsp"></jsp:include>
 
