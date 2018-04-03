@@ -1,12 +1,14 @@
 package com.ipartek.formacion.nidea.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ipartek.formacion.nidea.model.MaterialDAO;
 import com.ipartek.formacion.nidea.pojo.Alert;
 import com.ipartek.formacion.nidea.pojo.Material;
 import com.ipartek.formacion.nidea.pojo.Mesa;
@@ -17,6 +19,8 @@ import com.ipartek.formacion.nidea.pojo.Mesa;
 public class MesaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private String view;
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -24,55 +28,71 @@ public class MesaController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Mesa m = new Mesa();
+		try {
+			Mesa m = new Mesa();
+			MaterialDAO dao = new MaterialDAO();
+			ArrayList<Material> listaMateriales = dao.getAll();
 
-		// recoger parametros *** SIEMPRE String ***
-		String sPatas = request.getParameter("patas");
+			// recoger parametros *** SIEMPRE String ***
+			String sPatas = request.getParameter("patas");
 
-		// Si parametros no son NULL recoger y crear mesa a medida
-		if (sPatas != null) {
+			// Si parametros no son NULL recoger y crear mesa a medida
+			if (sPatas != null) {
 
-			int patas = Integer.parseInt(sPatas);
-			try {
-				m.setNumeroPatas(patas);
-			} catch (Exception e) {
+				int patas = Integer.parseInt(sPatas);
 				try {
-					m.setNumeroPatas(1);
-				} catch (Exception e1) {
-					e1.printStackTrace();
+					m.setNumeroPatas(patas);
+				} catch (Exception e) {
+					try {
+						m.setNumeroPatas(1);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					Alert alert = new Alert(e.getMessage(), Alert.TIPO_WARNING);
+					request.setAttribute("alert", alert);
 				}
-				Alert alert = new Alert(e.getMessage(), Alert.TIPO_WARNING);
-				request.setAttribute("alert", alert);
+
+				String sDimnesion = request.getParameter("dimension");
+				int dimension = Integer.parseInt(sDimnesion);
+				m.setDimension(dimension);
+
+				String sCustom = request.getParameter("custom");
+				if (sCustom == null) {
+					m.setCustom(false);
+				} else { // viene 'on'
+					m.setCustom(true);
+
+					// color
+					String color = request.getParameter("color");
+					m.setColor(color);
+				}
+
+				String sMaterialId = request.getParameter("material");
+				int idMaterial = Integer.parseInt(sMaterialId);
+
+				if (idMaterial != -1) {
+					m.setMaterial(new Material());
+					m.getMaterial().setId(listaMateriales.get(idMaterial).getId());
+					m.getMaterial().setPrecio(listaMateriales.get(idMaterial).getPrecio());
+					m.getMaterial().setNombre(listaMateriales.get(idMaterial).getNombre());
+				}
+
 			}
 
-			String sDimnesion = request.getParameter("dimension");
-			int dimension = Integer.parseInt(sDimnesion);
-			m.setDimension(dimension);
+			// enviar atributos a la JSP
+			request.setAttribute("mesa", m);
+			request.setAttribute("materiales", dao.getAll());
 
-			String sCustom = request.getParameter("custom");
-			if (sCustom == null) {
-				m.setCustom(false);
-			} else { // viene 'on'
-				m.setCustom(true);
+			// ir a la JSP
+			view = "mesa.jsp";
 
-				// color
-				String color = request.getParameter("color");
-				m.setColor(color);
-			}
+		} catch (NumberFormatException e) {
 
-			String sMaterialId = request.getParameter("material");
-			int idMaterial = Integer.parseInt(sMaterialId);
-			m.setMaterial(new Material(idMaterial));
+			e.printStackTrace();
 
+		} finally {
+			request.getRequestDispatcher("mesa.jsp").forward(request, response);
 		}
-
-		// enviar atributos a la JSP
-		request.setAttribute("mesa", m);
-		request.setAttribute("materiales", Material.NOMBRES);
-		request.setAttribute("materialesCodigo", Material.IDS);
-
-		// ir a la JSP
-		request.getRequestDispatcher("mesa.jsp").forward(request, response);
 
 	}
 

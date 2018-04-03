@@ -8,29 +8,30 @@ public class Material {
 
 	private int id;
 	private String nombre;
-	private int precio;
+	private float precio;
 
 	public Material() {
 		super();
-		this.id = IDS[0];
-		this.nombre = NOMBRES[0];
-		this.precio = PRECIOS[0];
+		// this.id = IDS[0];
+		// this.nombre = NOMBRES[0];
+		// this.precio = PRECIOS[0];
+		this.id = -1;
 	}
 
 	public Material(int id) {
 		this();
 		this.id = id;
 
-		int index = 0;
-		for (int i = 0; i < IDS.length; i++) {
-			if (id == IDS[i]) {
-				index = i;
-				break;
-			}
-		}
-
-		this.nombre = NOMBRES[index];
-		this.precio = PRECIOS[index];
+		// int index = 0;
+		// for (int i = 0; i < IDS.length; i++) {
+		// if (id == IDS[i]) {
+		// index = i;
+		// break;
+		// }
+		// }
+		//
+		// this.nombre = NOMBRES[index];
+		// this.precio = PRECIOS[index];
 	}
 
 	public int getId() {
@@ -49,11 +50,11 @@ public class Material {
 		this.nombre = nombre;
 	}
 
-	public int getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(int precio) {
+	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
 

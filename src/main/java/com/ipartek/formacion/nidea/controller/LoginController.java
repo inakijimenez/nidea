@@ -16,7 +16,12 @@ import com.ipartek.formacion.nidea.pojo.Alert;
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	RequestDispatcher dispatcher;
+	private RequestDispatcher dispatcher;
+	private String view;
+	private Alert alert;
+
+	private static final String USER = "admin";
+	private static final String PASSWORD = "admin";
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -37,16 +42,22 @@ public class LoginController extends HttpServlet {
 
 		try {
 
-			logear(request);
-			dispatcher = request.getRequestDispatcher("/backoffice");
+			if (logear(request)) {
+				alert = new Alert("Ongi Etorri", Alert.TIPO_PRIMARY);
+				view = "backoffice/index.jsp";
+			} else {
+				alert = new Alert("Valores no validos. Prueba con admin - admin", Alert.TIPO_WARNING);
+				view = "views/login/index.jsp";
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Alert alert = new Alert("Valores no validos. Prueba con admin - admin", Alert.TIPO_WARNING);
-			request.setAttribute("alert", alert);
-			dispatcher = request.getRequestDispatcher("views/login/index.jsp");
+			alert = new Alert();
+			view = "views/login/index.jsp";
+
 		} finally {
-			dispatcher.forward(request, response);
+			request.setAttribute("alert", alert);
+			request.getRequestDispatcher(view).forward(request, response);
 		}
 
 	}
@@ -54,12 +65,12 @@ public class LoginController extends HttpServlet {
 	private Boolean logear(HttpServletRequest request) throws Exception {
 		String nombre = request.getParameter("nombre");
 		String pass = request.getParameter("pass");
+		Boolean validado = false;
 
-		if (nombre.equals("admin") && pass.equals("admin")) {
-			return true;
-		} else {
-			throw new Exception();
+		if (USER.equalsIgnoreCase(nombre) && PASSWORD.equals(pass)) {
+			validado = true;
 		}
+		return validado;
 
 	}
 

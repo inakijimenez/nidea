@@ -114,7 +114,7 @@ public class Mesa implements Cloneable {
 	 * @see consultar todas las constantes definidas para los precios
 	 * @return int precio en �
 	 */
-	public int getPrecio() {
+	public float getPrecio() {
 
 		int resul = 0;
 

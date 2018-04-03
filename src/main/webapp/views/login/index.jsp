@@ -6,15 +6,14 @@
 	<form action="login" method="post">
 
 		<div class="form-group">
-			<label for="nombre">Nombre</label> <input type="text"
-				class="form-control" id="nombre" aria-describedby="nombreHelp"
-				placeholder="Introduce Nombre" name="nombre"> <small
-				id="nombreHelp" class="form-text text-muted">Introduce tu
-				nombre.</small>
+			<input type="text" class="form-control" id="nombre"
+				placeholder="Nombre Usuario" name="nombre" required autofocus>
+				<label for="nombre">Nombre de Usuario</label>
 		</div>
 		<div class="form-group">
-			<label for="pass">Password</label> <input type="password"
-				class="form-control" id="pass" placeholder="Password" name="pass">
+			<input type="password" class="form-control" id="pass"
+				placeholder="Contraseña" name="pass" required>
+				<label for="pass">Contraseña</label>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>
